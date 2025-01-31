@@ -1,7 +1,6 @@
 // Aguarda o carregamento completo da página antes de capturar os valores
 window.addEventListener("load", () => {
-    console.log("🔄 Página carregada, iniciando extração de valores...");
-
+    
     // Função para limpar e converter valores para número corretamente
     const parseCurrency = (value, label) => {
         if (!value) {
@@ -27,8 +26,6 @@ window.addEventListener("load", () => {
         }
 
         let numericValue = parseFloat(cleanedValue.replace(',', '.'));
-
-        console.log(`Valor final convertido de ${label}:`, numericValue);
 
         return numericValue;
     };
@@ -57,12 +54,6 @@ window.addEventListener("load", () => {
 
     const formatNumberBRL = (num) =>
         num.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            
-    
-    console.log(`Preço Limpo: ARS ${formatNumber(price)}`);
-    console.log(`Frete Limpo: ARS ${formatNumber(shipping)}`);
-    console.log(`Total: ARS ${formatNumber(total)}`);
-    console.log(`Total: ARS ${formatNumberBRL(total)}`);
 
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if (request.action === "getPrices") {
@@ -73,6 +64,4 @@ window.addEventListener("load", () => {
             });
         }
     });
-
-    console.log("✅ Extração de valores concluída!");
 });

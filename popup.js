@@ -14,11 +14,17 @@ document.addEventListener("DOMContentLoaded", async function () {
             document.getElementById("shipping").textContent = `ARS ${response.shipping}`;
             document.getElementById("total").textContent = `ARS ${response.total}`;
 
-            // Converte ARS para BRL e exibe
+            // Converte ARS para BRL e aplica os cálculos financeiros
             const totalARS = formatToNumber(response.total);
             if (!isNaN(totalARS)) {
-                const totalBRL = await converterARStoBRL(totalARS);
-                document.getElementById("totalBRL").textContent = `BRL ${formatNumberBRL(totalBRL)}`;
+                const totalBRL = parseFloat(await converterARStoBRL(totalARS));
+                
+                if (!isNaN(totalBRL)) {
+                    document.getElementById("totalBRL").textContent = `BRL ${formatNumberBRL(totalBRL)}`;
+                    aplicarCalculosFinanceiros(totalBRL);
+                } else {
+                    document.getElementById("totalBRL").textContent = "Erro ao converter ARS para BRL";
+                }
             } else {
                 document.getElementById("totalBRL").textContent = "Erro na conversão";
             }
@@ -35,13 +41,64 @@ document.addEventListener("DOMContentLoaded", async function () {
             return (valorARS * taxaDeCambio).toFixed(2);
         } catch (error) {
             console.error('Erro ao obter a taxa de câmbio:', error);
-            return "Erro";
+            return NaN;
         }
     }
 
-    // Função para formatar números para BRL
-    const formatNumberBRL = (num) =>
-        parseFloat(num).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    // Aplicação dos cálculos financeiros
+    function aplicarCalculosFinanceiros(valorEmReais) {
+        if (isNaN(valorEmReais)) {
+            console.error("Erro: valorEmReais não é um número válido.");
+            document.getElementById("precoFinal").textContent = "Erro ao calcular valores.";
+            return;
+        }
+
+        var oscilacaoCambio = 0.01;
+        var markup = 2.7;
+        var taxaCartao = 0.05;
+        var taxaMarketing = 0.1;
+        var taxaDevolucao = 0.03;
+        var taxaPlataforma = 0.04;
+
+        function calcularPrecoFinal() {
+            let valorComOscilacao = valorEmReais + (valorEmReais * oscilacaoCambio);
+            let precoFinal = valorComOscilacao * markup;
+            return parseFloat(precoFinal.toFixed(2));
+        }
+
+        function calcularLucroBruto(precoFinal) {
+            return parseFloat((precoFinal - valorEmReais).toFixed(2));
+        }
+
+        function calcularDeducao(precoFinal, taxa) {
+            return parseFloat((precoFinal * taxa).toFixed(2));
+        }
+
+        const precoFinal = calcularPrecoFinal();
+        const lucroBruto = calcularLucroBruto(precoFinal);
+        const deducaoCartao = calcularDeducao(precoFinal, taxaCartao);
+        const deducaoMarketing = calcularDeducao(precoFinal, taxaMarketing);
+        const deducaoDevolucao = calcularDeducao(precoFinal, taxaDevolucao);
+        const deducaoPlataforma = calcularDeducao(precoFinal, taxaPlataforma);
+
+        const totalDeducoes = deducaoCartao + deducaoMarketing + deducaoDevolucao + deducaoPlataforma;
+        const margemContribuicao = parseFloat((lucroBruto - totalDeducoes).toFixed(2));
+
+        // Exibe os valores no HTML com descrições
+        document.getElementById("precoFinal").textContent = `Preço Final: R$ ${formatNumberBRL(precoFinal)}`;
+        document.getElementById("lucroBruto").textContent = `Lucro Bruto: R$ ${formatNumberBRL(lucroBruto)}`;
+        document.getElementById("deducaoCartao").textContent = `Taxa do Cartão (5%): R$ ${formatNumberBRL(deducaoCartao)}`;
+        document.getElementById("deducaoMarketing").textContent = `Taxa de Marketing (10%): R$ ${formatNumberBRL(deducaoMarketing)}`;
+        document.getElementById("deducaoDevolucao").textContent = `Taxa de Devolução/Cancelamento (3%): R$ ${formatNumberBRL(deducaoDevolucao)}`;
+        document.getElementById("deducaoPlataforma").textContent = `Comissão da Plataforma (4%): R$ ${formatNumberBRL(deducaoPlataforma)}`;
+        document.getElementById("totalDeducoes").textContent = `Total de Deduções: R$ ${formatNumberBRL(totalDeducoes)}`;
+        document.getElementById("margemContribuicao").textContent = `Margem de Contribuição: R$ ${formatNumberBRL(margemContribuicao)}`;
+    }
+
+    // Função para formatar valores em BRL
+    function formatNumberBRL(num) {
+        return parseFloat(num).toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
 
     // Função para converter string ARS para número válido
     function formatToNumber(value) {
@@ -53,7 +110,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     // Evento de cópia para o botão
     document.getElementById("copyButton").addEventListener("click", function () {
-        const textToCopy = document.getElementById("total").textContent;
+        const textToCopy = document.getElementById("precoFinal").textContent;
         navigator.clipboard.writeText(textToCopy).catch(err => console.error("Erro ao copiar:", err));
     });
 });
