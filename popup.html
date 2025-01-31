@@ -12,6 +12,18 @@
         <p><strong>Preço:</strong> <span id="price">Carregando...</span></p>
         <p><strong>Frete:</strong> <span id="shipping">Carregando...</span></p>
         
+
+        <div class="container">
+            <h3>Ajuste de Taxas</h3>
+            <label>Oscilação Câmbio (%): <input type="number" id="oscilacaoCambio" value="1" step="0.01"></label>
+            <label>Markup: <input type="number" id="markup" value="2.7" step="0.1"></label>
+            <label>Taxa Cartão (%): <input type="number" id="taxaCartao" value="5" step="0.1"></label>
+            <label>Taxa Marketing (%): <input type="number" id="taxaMarketing" value="10" step="0.1"></label>
+            <label>Taxa Devolução (%): <input type="number" id="taxaDevolucao" value="3" step="0.1"></label>
+            <label>Taxa Plataforma (%): <input type="number" id="taxaPlataforma" value="4" step="0.1"></label>
+        </div>
+        
+
         <p class="total">
             <strong>Total:</strong> 
             <span id="total">Carregando...</span>
