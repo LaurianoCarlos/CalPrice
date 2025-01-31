@@ -1,8 +1,8 @@
-// Aguarda o carregamento completo da página antes de capturar os valores
+
 window.addEventListener("load", () => {
     console.log("🔄 Página carregada, iniciando extração de valores...");
 
-    // Função para limpar e converter valores para número corretamente
+ 
     const parseCurrency = (value, label) => {
         if (!value) return 0;
 
@@ -25,7 +25,7 @@ window.addEventListener("load", () => {
         return numericValue;
     };
 
-    // Busca dinamicamente os elementos de preço e frete
+ 
     const getPriceElement = () => {
         return document.querySelector(
             '[class*="price--currentPriceText"], [class*="banner--price"], [class*="price--current--"], [class*="pdp-price"], [class*="current-price"]'
@@ -38,7 +38,7 @@ window.addEventListener("load", () => {
         );
     };
 
-    // Extrai os valores limpos corretamente
+
     let priceElement = getPriceElement();
     let shippingElement = getShippingElement();
 
@@ -49,14 +49,14 @@ window.addEventListener("load", () => {
     let shipping = shippingElement ? parseCurrency(shippingElement.innerText.trim(), "Frete") : 0;
     let total = price + shipping;
 
-    // Formata o número no padrão correto: milhar com vírgula, decimal com ponto (Ex: 17,978.25)
+
     const formatNumber = (num) => num.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
     console.log(`Preço Limpo: ARS ${formatNumber(price)}`);
     console.log(`Frete Limpo: ARS ${formatNumber(shipping)}`);
     console.log(`Total: ARS ${formatNumber(total)}`);
 
-    // Envia os valores para o popup.js
+ 
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if (request.action === "getPrices") {
             sendResponse({
