@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "Soma de Preço e Frete",
+    "name": "PriceCal",
     "version": "1.0",
     "description": "Captura e soma automaticamente o preço e o frete de um produto.",
     "permissions": ["activeTab", "scripting"],

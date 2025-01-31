@@ -14,3 +14,17 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const formatNumberBRL = (num) =>
+        num.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    const totalValue = 1234567.89;
+    document.getElementById("total").textContent = formatNumberBRL(totalValue);
+
+    document.getElementById("copyButton").addEventListener("click", function () {
+        const textToCopy = document.getElementById("total").textContent;
+        navigator.clipboard.writeText(textToCopy).catch(err => console.error("Erro ao copiar:", err));
+    });
+});
+
