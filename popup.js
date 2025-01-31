@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 document.getElementById("shipping").textContent = "Erro ao capturar";
                 document.getElementById("total").textContent = "Erro ao capturar";
                 document.getElementById("totalBRL").textContent = "Erro ao capturar";
+                document.getElementById("totalARS").textContent = "Erro ao capturar";
                 return;
             }
 
@@ -18,10 +19,14 @@ document.addEventListener("DOMContentLoaded", async function () {
             const totalARS = formatToNumber(response.total);
             if (!isNaN(totalARS)) {
                 const totalBRL = parseFloat(await converterARStoBRL(totalARS));
-                
+
                 if (!isNaN(totalBRL)) {
                     document.getElementById("totalBRL").textContent = `BRL ${formatNumberBRL(totalBRL)}`;
-                    aplicarCalculosFinanceiros(totalBRL);
+                    const precoFinal = aplicarCalculosFinanceiros(totalBRL);
+
+                    // Converte o preço final de volta para ARS e exibe
+                    const precoFinalARS = await converterBRLtoARS(precoFinal);
+                    document.getElementById("totalARS").textContent = `Preço Calculado em ARS: ARS ${formatNumberBRL(precoFinalARS)}`;
                 } else {
                     document.getElementById("totalBRL").textContent = "Erro ao converter ARS para BRL";
                 }
@@ -45,12 +50,26 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
     }
 
+    // Função para converter BRL para ARS
+    async function converterBRLtoARS(valorBRL) {
+        const url = 'https://economia.awesomeapi.com.br/last/BRL-ARS';
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            const taxaDeCambio = parseFloat(data.BRLARS.bid);
+            return (valorBRL * taxaDeCambio).toFixed(2);
+        } catch (error) {
+            console.error('Erro ao obter a taxa de câmbio para ARS:', error);
+            return NaN;
+        }
+    }
+
     // Aplicação dos cálculos financeiros
     function aplicarCalculosFinanceiros(valorEmReais) {
         if (isNaN(valorEmReais)) {
             console.error("Erro: valorEmReais não é um número válido.");
             document.getElementById("precoFinal").textContent = "Erro ao calcular valores.";
-            return;
+            return NaN;
         }
 
         var oscilacaoCambio = 0.01;
@@ -93,6 +112,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         document.getElementById("deducaoPlataforma").textContent = `Comissão da Plataforma (4%): R$ ${formatNumberBRL(deducaoPlataforma)}`;
         document.getElementById("totalDeducoes").textContent = `Total de Deduções: R$ ${formatNumberBRL(totalDeducoes)}`;
         document.getElementById("margemContribuicao").textContent = `Margem de Contribuição: R$ ${formatNumberBRL(margemContribuicao)}`;
+
+        return precoFinal;
     }
 
     // Função para formatar valores em BRL
