@@ -8,7 +8,6 @@ let taxaPlataforma = 0.04;
 let totalBRL = 0;
 
 document.addEventListener("DOMContentLoaded", async function () {
-    // Captura valores da página ativa
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         chrome.tabs.sendMessage(tabs[0].id, { action: "getPrices" }, async function (response) {
             if (chrome.runtime.lastError || !response) {
@@ -63,7 +62,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 async function atualizarPrecoARS(precoFinal) {
     if (!isNaN(precoFinal)) {
         const precoFinalARS = await converterBRLtoARS(precoFinal);
-        document.getElementById("totalARS").textContent = `Preço Calculado em ARS: ARS ${formatNumberBRL(precoFinalARS)}`;
+        document.getElementById("totalARS").textContent = `PREÇO DE VENDA: ARS ${formatNumberBRL(precoFinalARS)}`;
     } else {
         document.getElementById("totalARS").textContent = "Erro ao calcular preço em ARS";
     }
@@ -102,7 +101,7 @@ function aplicarCalculosFinanceiros(valorEmReais) {
     const margemContribuicao = parseFloat((lucroBruto - totalDeducoes).toFixed(2));
 
     // Exibe os valores no HTML com descrições
-    document.getElementById("precoFinal").textContent = `Preço Final: R$ ${formatNumberBRL(precoFinal)}`;
+    document.getElementById("precoFinal").textContent = `Preço Calculado: R$ ${formatNumberBRL(precoFinal)}`;
     document.getElementById("lucroBruto").textContent = `Lucro Bruto: R$ ${formatNumberBRL(lucroBruto)}`;
     document.getElementById("deducaoCartao").textContent = `Taxa do Cartão: R$ ${formatNumberBRL(deducaoCartao)}`;
     document.getElementById("deducaoMarketing").textContent = `Taxa de Marketing: R$ ${formatNumberBRL(deducaoMarketing)}`;

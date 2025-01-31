@@ -1,56 +1,31 @@
 body {
-    background-color: #f8f9fa;
-    font-family: 'Arial', sans-serif;
-}
-.container {
+    font-family: Arial, sans-serif;
+    text-align: center;
     width: 600px;
-    margin: 40px auto;
-    padding: 20px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    background: #f4f4f4;
 }
-h2, h3 {
-    color: #343a40;
-    text-align: center;
-}
-.form-label {
-    font-weight: bold;
-    margin-top: 10px;
-}
-.total-box {
-    background: #e9f5e9;
+
+.container {
+    background: white;
     padding: 15px;
-    border-radius: 5px;
-    text-align: center;
-    font-size: 1.2rem;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    margin-bottom: 10px;
+    font-size: 18px;
+}
+
+p {
+    font-size: 14px;
+    margin: 5px 0;
+}
+
+.total {
+    font-size: 16px;
+    color: #d9534f;
     font-weight: bold;
-    color: #198754;
 }
-.copy-btn {
-    display: inline-block;
-    margin-left: 10px;
-    background: #198754;
-    color: #fff;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-.copy-btn:hover {
-    background: #145a32;
-}
-.form-control {
-    border-radius: 5px;
-    border: 1px solid #ced4da;
-}
-.results p {
-    font-weight: bold;
-    font-size: 1rem;
-    padding: 5px;
-    border-bottom: 1px solid #ddd;
-}
-.green-text {
-    color: #198754;
-}
+
